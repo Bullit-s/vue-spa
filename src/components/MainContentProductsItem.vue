@@ -45,14 +45,6 @@ export default defineComponent({
       required: true,
     },
   },
-  watch: {
-    product: {
-      handler(newProduct: ProductType) {
-        console.log('Product prop updated:', newProduct);
-      },
-      deep: true,
-    },
-  },
 });
 </script>
 

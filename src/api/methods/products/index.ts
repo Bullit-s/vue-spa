@@ -1,5 +1,5 @@
 import api from '@/api';
-import { ApiResponse } from '@/api/types';
+import { ApiRequestPagination, ApiResponse } from '@/api/types';
 import {
   CreateProductRequest,
   CreateProductResponse,
@@ -10,10 +10,12 @@ import {
 
 export const getProductsByCategory = async (
   category: string,
+  params: ApiRequestPagination,
 ): Promise<ProductsResponse> => {
   const response = await api.get('/products/category', {
     params: {
       type: category,
+      ...params,
     },
   });
   return response.data;

@@ -48,20 +48,22 @@ export default defineComponent({
 }
 
 .layout-sidebar {
-  min-width: 360px;
-  max-width: 360px;
+  min-width: 240px;
+  max-width: 240px;
   width: 100%;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   min-height: 0;
+
+  @include media-min(md) {
+    min-width: 360px;
+    max-width: 360px;
+  }
 }
 
 .layout-content {
   flex: 1;
   overflow: hidden;
-}
-
-@include media-min(sm) {
 }
 </style>

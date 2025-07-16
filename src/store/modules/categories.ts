@@ -128,13 +128,14 @@ const categoriesModule: Module<CategoriesState, unknown> = {
       const index = state.products.findIndex(
         (product) => product.id === updatedProduct.id,
       );
+
       if (index !== -1) {
         Object.assign(state.products[index], updatedProduct);
       }
     },
   },
   actions: {
-    async loadCategories({ commit }) {
+    async loadCategories({ commit, state }) {
       commit('SET_LOADING', true);
       commit('SET_ERROR', null);
 
@@ -161,6 +162,7 @@ const categoriesModule: Module<CategoriesState, unknown> = {
             try {
               const productsResponse = await getProductsByCategory(
                 categoryName,
+                { limit: state.filters.limit },
               );
               const count = productsResponse.products
                 ? productsResponse.products.length
@@ -222,7 +224,9 @@ const categoriesModule: Module<CategoriesState, unknown> = {
         );
 
         if (activeCategory) {
-          const response = await getProductsByCategory(activeCategory.name);
+          const response = await getProductsByCategory(activeCategory.name, {
+            limit: state.filters.limit,
+          });
 
           commit('SET_PRODUCTS', response.products || []);
         }
@@ -257,7 +261,7 @@ const categoriesModule: Module<CategoriesState, unknown> = {
         const response = await updateProduct(updatedProduct.id, {
           model: updatedProduct.model,
           color: updatedProduct.color,
-          discount: updatedProduct.discount.toString(),
+          discount: updatedProduct.discount?.toString(),
         });
 
         const updatedProductData = {

@@ -74,7 +74,29 @@ export default defineComponent({
   },
   computed: {
     products(): ProductType[] {
-      return this.$store.state.categories.products;
+      const products = [...this.$store.state.categories.products];
+      const sortType = this.$store.state.categories.filters.sort;
+
+      if (!sortType) return products;
+
+      return products.sort((a, b) => {
+        switch (sortType) {
+          case 'title_asc':
+            return (a.title || a.model || '').localeCompare(
+              b.title || b.model || '',
+            );
+          case 'title_desc':
+            return (b.title || b.model || '').localeCompare(
+              a.title || a.model || '',
+            );
+          case 'price_asc':
+            return a.price - b.price;
+          case 'price_desc':
+            return b.price - a.price;
+          default:
+            return 0;
+        }
+      });
     },
     productsLoading(): boolean {
       return this.$store.state.categories.productsLoading;
@@ -98,6 +120,9 @@ export default defineComponent({
   },
   watch: {
     '$store.state.categories.activeCategory'() {
+      this.loadProducts();
+    },
+    '$store.state.categories.filters.limit'() {
       this.loadProducts();
     },
   },

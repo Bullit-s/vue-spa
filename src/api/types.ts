@@ -4,3 +4,5 @@ export type ApiResponse<
   status: string;
   message: string;
 } & T;
+
+export type ApiRequestPagination = { limit: number };
