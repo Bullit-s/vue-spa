@@ -27,11 +27,12 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   gap: spacing(12);
-  min-height: 100vh;
-  max-height: 100vh;
+
   padding-top: spacing(8);
 
   @include media-min(md) {
+    min-height: 100vh;
+    max-height: 100vh;
     padding-top: spacing(12);
   }
 
@@ -45,16 +46,19 @@ export default defineComponent({
   gap: spacing(7.5);
   flex: 1;
   min-height: 0;
+  flex-direction: column;
+
+  @include media-min(md) {
+    flex-direction: row;
+  }
 }
 
 .layout-sidebar {
-  min-width: 240px;
-  max-width: 240px;
-  width: 100%;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   min-height: 0;
+  width: 100%;
 
   @include media-min(md) {
     min-width: 360px;

@@ -30,7 +30,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: $color-white;
   color: $color-black;
-  overflow: hidden;
+
+  overflow: auto;
+
+  @include media-min(md) {
+    overflow: hidden;
+  }
 }
 
 button {

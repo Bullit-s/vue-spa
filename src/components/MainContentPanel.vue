@@ -19,9 +19,12 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   gap: spacing(8);
-  height: 100%;
-  min-height: 0;
-  overflow-y: auto;
+
+  @include media-min(md) {
+    height: 100%;
+    min-height: 0;
+    overflow-y: auto;
+  }
 
   &::-webkit-scrollbar {
     width: 6px;

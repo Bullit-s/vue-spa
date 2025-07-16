@@ -22,3 +22,6 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+### Deploy on Vercel
+See [bullit-Vue-Spa](https://bullit-vue-spa.vercel.app/).

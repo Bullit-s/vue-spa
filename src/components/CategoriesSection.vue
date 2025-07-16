@@ -133,7 +133,6 @@ export default defineComponent({
   flex-direction: column;
   height: 100%;
   min-height: 0;
-
   padding-bottom: spacing(8);
 
   @include media-min(md) {
