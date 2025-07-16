@@ -11,7 +11,21 @@
     @mouseup="$emit('mouseup', $event)"
     @click="handleClick"
   >
-    <slot />
+    <span
+      v-if="leftSection || $slots.leftSection"
+      class="base-button__left-section"
+    >
+      <slot name="leftSection">{{ leftSection }}</slot>
+    </span>
+    <span class="base-button__content">
+      <slot />
+    </span>
+    <span
+      v-if="rightSection || $slots.rightSection"
+      class="base-button__right-section"
+    >
+      <slot name="rightSection">{{ rightSection }}</slot>
+    </span>
   </button>
 </template>
 
@@ -32,6 +46,14 @@ export default defineComponent({
     selected: Boolean,
     active: Boolean,
     disabled: Boolean,
+    leftSection: {
+      type: String,
+      default: '',
+    },
+    rightSection: {
+      type: String,
+      default: '',
+    },
   },
   methods: {
     handleClick(event: MouseEvent) {
@@ -54,13 +76,24 @@ export default defineComponent({
   cursor: pointer;
   transition: all 0.15s;
   user-select: none;
-  font-weight: 500p;
   background: $color-white;
   font-family: inherit;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-style: Medium;
+  gap: spacing(2);
+
+  &__left-section {
+    display: flex;
+    align-items: center;
+  }
+
+  &__content {
+    display: flex;
+    align-items: center;
+  }
+
+  &__right-section {
+    display: flex;
+    align-items: center;
+  }
 
   &--small {
     height: 24px;

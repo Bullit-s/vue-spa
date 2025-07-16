@@ -1,50 +1,29 @@
 <template>
   <AppLayout>
-    <template #default>
-      <section>
-        <div class="button-demo">
-          <BaseButton size="small" variant="primary">Primary</BaseButton>
-          <BaseButton size="small" variant="secondary">Gray</BaseButton>
-          <BaseButton size="small" variant="outlined">Outlined</BaseButton>
-          <BaseButton size="small" variant="danger">Danger</BaseButton>
-        </div>
-        <div class="button-demo">
-          <BaseButton size="default" variant="primary">Primary</BaseButton>
-          <BaseButton size="default" variant="secondary">Gray</BaseButton>
-          <BaseButton size="default" variant="outlined">Outlined</BaseButton>
-          <BaseButton size="default" variant="danger">Danger</BaseButton>
-        </div>
-        <div class="button-demo">
-          <BaseButton size="large" variant="primary">Primary</BaseButton>
-          <BaseButton size="large" variant="secondary">Gray</BaseButton>
-          <BaseButton size="large" variant="outlined">Outlined</BaseButton>
-          <BaseButton size="large" variant="danger">Danger</BaseButton>
-        </div>
-        <div class="button-demo">
-          <BaseButton size="xl" variant="primary">Primary</BaseButton>
-          <BaseButton size="xl" variant="secondary">Gray</BaseButton>
-          <BaseButton size="xl" variant="outlined">Outlined</BaseButton>
-          <BaseButton size="xl" variant="danger">Danger</BaseButton>
-        </div>
-        <div class="button-demo">
-          <BaseButton disabled size="xl" variant="primary">Primary</BaseButton>
-          <BaseButton disabled size="xl" variant="secondary">Gray</BaseButton>
-          <BaseButton disabled size="xl" variant="outlined">Outlined</BaseButton>
-          <BaseButton disabled size="xl" variant="danger">Danger</BaseButton>
-        </div>
-      </section>
-    </template>
+    <MainLayout>
+      <template #header>
+        <Typography tag="h1" variant="heading1">Заголовок</Typography>
+      </template>
+      <template #sidebar>
+        <CategoriesList />
+      </template>
+      <template #content>
+        <div>content</div>
+      </template>
+    </MainLayout>
   </AppLayout>
 </template>
 
 <script lang="ts">
-import BaseButton from '@/components/BaseButton.vue';
+import CategoriesList from '@/components/Categories.vue';
+import Typography from '@/components/ui/Typography.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
+import MainLayout from '@/layouts/MainLayout.vue';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'HomeView',
-  components: { AppLayout, BaseButton },
+  components: { AppLayout, MainLayout, Typography, CategoriesList },
 });
 </script>
 

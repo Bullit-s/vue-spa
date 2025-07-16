@@ -1,8 +1,6 @@
 <template>
   <div class="app-layout">
-    <main class="app-main">
-      <slot />
-    </main>
+    <slot />
   </div>
 </template>
 
@@ -14,14 +12,20 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .app-layout {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
-}
+  height: 100%;
+  min-height: 100vh;
+  padding: spacing(12) spacing(16);
 
-.app-main {
-  flex: 1;
+  @include media-min(md) {
+    padding: spacing(14) spacing(24);
+  }
+
+  @include media-min(lg) {
+    padding: spacing(20) spacing(40);
+  }
 }
 </style>
