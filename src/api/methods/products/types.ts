@@ -35,7 +35,7 @@ export type CreateProductResponse = ApiResponse<
 export type UpdateProductRequest = {
   model: string;
   color: string;
-  discount: number;
+  discount: string;
 };
 
 export type UpdateProductResponse = ApiResponse<

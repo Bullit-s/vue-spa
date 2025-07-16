@@ -1,11 +1,11 @@
 <template>
   <div class="product-item">
     <div class="product-item__image">
-      <img :src="product.image" :alt="product.title" />
+      <img :src="product.image" :alt="product.model || product.title" />
     </div>
     <div class="product-item__content">
       <Typography class="product-item__title" tag="p" variant="heading3">{{
-        product.title
+        product.model || product.title || 'No title/model'
       }}</Typography>
       <Typography class="product-item__description" tag="p" variant="body1">{{
         product.description
@@ -13,20 +13,18 @@
     </div>
     <div class="product-item__actions">
       <ActionIcon
-        icon="settings-4-line"
-        variant="secondary"
-        size="xs"
+        icon="settings-3-line"
+        size="lg"
         class="product-item__action"
-        aria-label="Редактировать продукт"
         @click="$emit('edit', product)"
+        aria-label="Редактировать продукт"
       />
       <ActionIcon
-        icon="delete-bin-6-line"
-        variant="secondary"
-        size="xs"
+        icon="delete-bin-line"
+        size="lg"
         class="product-item__action"
-        aria-label="Удалить продукт"
         @click="$emit('delete', product)"
+        aria-label="Удалить продукт"
       />
     </div>
   </div>
@@ -45,6 +43,14 @@ export default defineComponent({
     product: {
       type: Object as PropType<ProductType>,
       required: true,
+    },
+  },
+  watch: {
+    product: {
+      handler(newProduct: ProductType) {
+        console.log('Product prop updated:', newProduct);
+      },
+      deep: true,
     },
   },
 });

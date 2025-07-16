@@ -1,6 +1,6 @@
 <template>
   <Modal :visible="visible" @close="handleCancel">
-    <div class="create-category-modal">
+    <div class="edit-product-modal">
       <ActionIcon
         icon="close-line"
         variant="default"
@@ -9,15 +9,17 @@
         @click="handleCancel"
       />
       <div class="modal-header">
-        <Typography tag="h2" variant="heading1">Создать категорию</Typography>
+        <Typography tag="h2" variant="heading1"
+          >Редактировать {{ product?.model || '' }}</Typography
+        >
       </div>
 
       <div class="modal-content">
         <Input
-          ref="nameInput"
-          v-model="categoryName"
-          label="Название категории"
-          placeholder="Введите название категории"
+          ref="modelInput"
+          v-model="productModel"
+          label="Название"
+          placeholder="Введите название"
           :error="error"
           required
           @enter="handleConfirm"
@@ -42,12 +44,12 @@
           fullWidth
           class="confirm-button"
           @click="handleConfirm"
-          :disabled="!categoryName.trim() || isLoading"
+          :disabled="!productModel.trim() || isLoading"
         >
           <template v-if="!isLoading" #leftSection>
-            <Icon name="add-line" size="lg" />
+            <Icon name="check-line" size="lg" />
           </template>
-          {{ isLoading ? 'Добавление...' : 'Добавить' }}
+          {{ isLoading ? 'Сохранение...' : 'Сохранить' }}
         </Button>
       </div>
     </div>
@@ -55,7 +57,8 @@
 </template>
 
 <script lang="ts">
-import Vue, { defineComponent } from 'vue';
+import { ProductType } from '@/api/methods/products/types';
+import { defineComponent, PropType } from 'vue';
 import ActionIcon from './ui/ActionIcon.vue';
 import Button from './ui/Button.vue';
 import Icon from './ui/Icon.vue';
@@ -64,7 +67,7 @@ import Modal from './ui/Modal.vue';
 import Typography from './ui/Typography.vue';
 
 export default defineComponent({
-  name: 'CategoriesCreateModal',
+  name: 'EditProductModal',
   components: {
     ActionIcon,
     Modal,
@@ -78,11 +81,15 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    product: {
+      type: Object as PropType<ProductType | null>,
+      default: null,
+    },
   },
-  emits: ['create', 'cancel', 'close'],
+  emits: ['save', 'cancel', 'close'],
   data() {
     return {
-      categoryName: '',
+      productModel: '',
       error: '',
       isLoading: false,
     };
@@ -92,14 +99,22 @@ export default defineComponent({
       if (newVal) {
         this.resetForm();
         this.$nextTick(() => {
-          const input = this.$refs.nameInput as Vue & { focus: () => void };
+          const input = this.$refs.modelInput as any;
           if (input) {
             input.focus();
           }
         });
       }
     },
-    categoryName() {
+    product: {
+      handler(newProduct: ProductType | null) {
+        if (newProduct) {
+          this.productModel = newProduct.model || '';
+        }
+      },
+      immediate: true,
+    },
+    productModel() {
       if (this.error) {
         this.error = '';
       }
@@ -107,32 +122,32 @@ export default defineComponent({
   },
   methods: {
     resetForm() {
-      this.categoryName = '';
+      this.productModel = this.product?.model || '';
       this.error = '';
       this.isLoading = false;
     },
-    validateName(): boolean {
-      const name = this.categoryName.trim();
+    validateModel(): boolean {
+      const model = this.productModel.trim();
 
-      if (!name) {
-        this.error = 'Название категории обязательно';
+      if (!model) {
+        this.error = 'Модель продукта обязательна';
         return false;
       }
 
-      if (name.length < 2) {
-        this.error = 'Название должно содержать минимум 2 символа';
+      if (model.length < 2) {
+        this.error = 'Модель должна содержать минимум 2 символа';
         return false;
       }
 
-      if (name.length > 50) {
-        this.error = 'Название не может быть длиннее 50 символов';
+      if (model.length > 100) {
+        this.error = 'Модель не может быть длиннее 100 символов';
         return false;
       }
 
       return true;
     },
     async handleConfirm() {
-      if (!this.validateName()) {
+      if (!this.validateModel() || !this.product) {
         return;
       }
 
@@ -141,10 +156,15 @@ export default defineComponent({
       try {
         await new Promise((resolve) => setTimeout(resolve, 300));
 
-        this.$emit('create', this.categoryName.trim());
+        const updatedProduct = {
+          ...this.product,
+          model: this.productModel.trim(),
+        };
+
+        this.$emit('save', updatedProduct);
         this.$emit('close');
       } catch (error) {
-        this.error = 'Произошла ошибка при создании категории';
+        this.error = 'Произошла ошибка при сохранении продукта';
       } finally {
         this.isLoading = false;
       }
@@ -158,7 +178,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.create-category-modal {
+.edit-product-modal {
   padding: spacing(12) spacing(16);
   width: 588px;
   max-width: calc(100vw - spacing(16));
@@ -167,8 +187,8 @@ export default defineComponent({
 
 .close-button {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: spacing(4);
+  right: spacing(4);
   z-index: 1;
 }
 
@@ -176,11 +196,11 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: spacing(6);
+  margin-bottom: spacing(12);
 }
 
 .modal-content {
-  margin-bottom: spacing(8);
+  margin-bottom: spacing(12);
 }
 
 .modal-actions {

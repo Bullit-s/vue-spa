@@ -70,10 +70,6 @@ export default defineComponent({
   width: 32px;
   height: 32px;
 
-  &:focus {
-    box-shadow: 0 0 0 2px rgba($color-purple-1, 0.2);
-  }
-
   &:active:not(:disabled) {
     cursor: not-allowed;
     opacity: 0.5;
@@ -100,6 +96,10 @@ export default defineComponent({
     &:hover:not(:disabled) {
       background: $color-gray-3;
       border-color: $color-gray-3;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 2px rgba($color-purple-1, 0.2);
     }
   }
 

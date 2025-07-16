@@ -1,5 +1,9 @@
 import { getCategories } from '@/api/methods/categories';
-import { deleteProduct, getProductsByCategory } from '@/api/methods/products';
+import {
+  deleteProduct,
+  getProductsByCategory,
+  updateProduct,
+} from '@/api/methods/products';
 import { ProductType } from '@/api/methods/products/types';
 import { Module } from 'vuex';
 
@@ -120,6 +124,14 @@ const categoriesModule: Module<CategoriesState, unknown> = {
         (product) => product.id !== productId,
       );
     },
+    UPDATE_PRODUCT(state, updatedProduct: ProductType) {
+      const index = state.products.findIndex(
+        (product) => product.id === updatedProduct.id,
+      );
+      if (index !== -1) {
+        Object.assign(state.products[index], updatedProduct);
+      }
+    },
   },
   actions: {
     async loadCategories({ commit }) {
@@ -156,14 +168,13 @@ const categoriesModule: Module<CategoriesState, unknown> = {
               commit('UPDATE_CATEGORY_COUNT', { categoryName, count });
             } catch (error) {
               console.error(
-                `Failed to load products for category ${categoryName}:`,
+                `Ошибка при загрузке продуктов для категории ${categoryName}:`,
                 error,
               );
             }
           }),
         );
       } catch (error) {
-        console.error('Failed to load categories:', error);
         commit('SET_ERROR', 'Ошибка при загрузке категорий');
       } finally {
         commit('SET_LOADING', false);
@@ -212,10 +223,10 @@ const categoriesModule: Module<CategoriesState, unknown> = {
 
         if (activeCategory) {
           const response = await getProductsByCategory(activeCategory.name);
+
           commit('SET_PRODUCTS', response.products || []);
         }
       } catch (error) {
-        console.error('Failed to load products:', error);
         commit('SET_PRODUCTS_ERROR', 'Ошибка при загрузке продуктов');
       } finally {
         commit('SET_PRODUCTS_LOADING', false);
@@ -237,7 +248,29 @@ const categoriesModule: Module<CategoriesState, unknown> = {
           });
         }
       } catch (error) {
-        console.error('Failed to delete product:', error);
+        console.error('Ошибка при удалении продукта:', error);
+        throw error;
+      }
+    },
+    async updateProduct({ commit }, updatedProduct: ProductType) {
+      try {
+        const response = await updateProduct(updatedProduct.id, {
+          model: updatedProduct.model,
+          color: updatedProduct.color,
+          discount: updatedProduct.discount.toString(),
+        });
+
+        const updatedProductData = {
+          ...updatedProduct,
+          model: response.model || updatedProduct.model,
+          color: response.color || updatedProduct.color,
+          discount: response.discount || updatedProduct.discount,
+        };
+
+        commit('UPDATE_PRODUCT', updatedProductData);
+        return response;
+      } catch (error) {
+        console.error('Ошибка при обновлении продукта:', error);
         throw error;
       }
     },

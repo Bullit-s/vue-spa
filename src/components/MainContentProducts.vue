@@ -16,7 +16,7 @@
       <div v-else class="products-list">
         <MainContentProductsItem
           v-for="product in products"
-          :key="product.id"
+          :key="`${product.id}-${product.model}`"
           :product="product"
           @edit="handleEditProduct"
           @delete="handleDeleteProduct"
@@ -35,6 +35,14 @@
       @cancel="cancelDeleteProduct"
       @close="cancelDeleteProduct"
     />
+
+    <EditProductModal
+      :visible="showEditModal"
+      :product="productToEdit"
+      @save="handleSaveProduct"
+      @cancel="cancelEditProduct"
+      @close="cancelEditProduct"
+    />
   </MainContentSection>
 </template>
 
@@ -42,6 +50,7 @@
 import { ProductType } from '@/api/methods/products/types';
 import { defineComponent } from 'vue';
 import ConfirmationModal from './ConfirmationModal.vue';
+import EditProductModal from './EditProductModal.vue';
 import MainContentProductsItem from './MainContentProductsItem.vue';
 import MainContentSection from './MainContentSection.vue';
 import BaseSpinner from './ui/Spinner.vue';
@@ -53,11 +62,14 @@ export default defineComponent({
     MainContentProductsItem,
     BaseSpinner,
     ConfirmationModal,
+    EditProductModal,
   },
   data() {
     return {
       showDeleteModal: false,
       productToDelete: null as ProductType | null,
+      showEditModal: false,
+      productToEdit: null as ProductType | null,
     };
   },
   computed: {
@@ -72,13 +84,13 @@ export default defineComponent({
     },
     deleteTitle(): string {
       if (!this.productToDelete) return '';
-      const title = this.productToDelete.title;
-      return `Удалить "${title}" ?`;
+      const model = this.productToDelete.model;
+      return `Удалить "${model}" ?`;
     },
     deleteMessage(): string {
       if (!this.productToDelete) return '';
-      const title = this.productToDelete.title;
-      return `Вы уверены, что хотите удалить "${title}" ?`;
+      const model = this.productToDelete.model;
+      return `Вы уверены, что хотите удалить "${model}" ?`;
     },
   },
   mounted() {
@@ -94,8 +106,8 @@ export default defineComponent({
       this.$store.dispatch('categories/loadProducts');
     },
     handleEditProduct(product: ProductType) {
-      console.log('Edit product:', product);
-      // TODO: Implement edit logic
+      this.productToEdit = product;
+      this.showEditModal = true;
     },
     handleDeleteProduct(product: ProductType) {
       this.productToDelete = product;
@@ -103,7 +115,6 @@ export default defineComponent({
     },
     confirmDeleteProduct() {
       if (this.productToDelete) {
-        console.log('Confirmed delete product:', this.productToDelete);
         this.$store.dispatch(
           'categories/deleteProduct',
           this.productToDelete.id,
@@ -114,6 +125,14 @@ export default defineComponent({
     cancelDeleteProduct() {
       this.showDeleteModal = false;
       this.productToDelete = null;
+    },
+    async handleSaveProduct(updatedProduct: ProductType) {
+      await this.$store.dispatch('categories/updateProduct', updatedProduct);
+      this.cancelEditProduct();
+    },
+    cancelEditProduct() {
+      this.showEditModal = false;
+      this.productToEdit = null;
     },
   },
 });
