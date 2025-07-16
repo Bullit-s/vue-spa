@@ -56,12 +56,12 @@
 
 <script lang="ts">
 import Vue, { defineComponent } from 'vue';
-import ActionIcon from './ActionIcon.vue';
-import Button from './Button.vue';
-import Icon from './Icon.vue';
-import Input from './Input.vue';
-import Modal from './Modal.vue';
-import Typography from './Typography.vue';
+import ActionIcon from './ui/ActionIcon.vue';
+import Button from './ui/Button.vue';
+import Icon from './ui/Icon.vue';
+import Input from './ui/Input.vue';
+import Modal from './ui/Modal.vue';
+import Typography from './ui/Typography.vue';
 
 export default defineComponent({
   name: 'CreateCategoryModal',

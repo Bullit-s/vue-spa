@@ -13,14 +13,24 @@
     </div>
 
     <div class="categories__list">
-      <CategoryItem
-        v-for="category in filteredCategories"
-        :key="category.id"
-        :name="category.name"
-        :count="category.count"
-        :is-active="category.id === activeCategoryId"
-        @click="handleSelectCategory(category.id)"
-      />
+      <div v-if="loading" class="categories__loading">
+        <BaseSpinner :size="32" />
+      </div>
+
+      <div v-else-if="error" class="categories__error">
+        <Typography variant="body2" color="error">{{ error }}</Typography>
+      </div>
+
+      <template v-else>
+        <CategoryItem
+          v-for="category in filteredCategories"
+          :key="category.id"
+          :name="category.name"
+          :count="category.count"
+          :is-active="category.id === activeCategoryId"
+          @click="handleSelectCategory(category.id)"
+        />
+      </template>
     </div>
 
     <div class="categories__add">
@@ -42,10 +52,11 @@
 
 <script lang="ts">
 import CategoryItem from '@/components/CategoryItem.vue';
+import CreateCategoryModal from '@/components/CreateCategoryModal.vue';
 import Button from '@/components/ui/Button.vue';
-import CreateCategoryModal from '@/components/ui/CreateCategoryModal.vue';
 import Icon from '@/components/ui/Icon.vue';
 import SearchInput from '@/components/ui/SearchInput.vue';
+import BaseSpinner from '@/components/ui/Spinner.vue';
 import Typography from '@/components/ui/Typography.vue';
 import Vue from 'vue';
 
@@ -58,6 +69,7 @@ export default Vue.extend({
     Icon,
     Typography,
     SearchInput,
+    BaseSpinner,
   },
   data() {
     return {
@@ -71,14 +83,23 @@ export default Vue.extend({
     activeCategoryId() {
       return this.$store.getters['categories/activeCategoryId'];
     },
-    searchQuery(): string {
+    searchQuery() {
       return this.$store.state.categories.searchQuery;
     },
+    loading() {
+      return this.$store.state.categories.loading;
+    },
+    error() {
+      return this.$store.state.categories.error;
+    },
+  },
+  async mounted() {
+    // Загружаем категории при монтировании компонента
+    await this.$store.dispatch('categories/loadCategories');
   },
   methods: {
     onSearchInput(value: string): void {
       this.$store.dispatch('categories/updateSearchQuery', value);
-      this.$emit('search', value);
     },
 
     handleSelectCategory(categoryId: number): void {
@@ -125,14 +146,13 @@ export default Vue.extend({
   }
 
   &__list {
+    flex: 1;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
     gap: spacing(4);
-    margin-bottom: spacing(6);
 
+    /* Custom scrollbar */
     &::-webkit-scrollbar {
       width: 4px;
     }
@@ -142,19 +162,24 @@ export default Vue.extend({
     }
 
     &::-webkit-scrollbar-thumb {
-      background: $color-gray-3;
-      border-radius: radius(2);
-    }
+      background: rgba($color-gray-3, 0.5);
+      border-radius: 2px;
 
-    &::-webkit-scrollbar-thumb:hover {
-      background: $color-purple-4;
+      &:hover {
+        background: $color-purple-1;
+      }
     }
+  }
+
+  &__loading,
+  &__error {
+    padding: spacing(4);
+    text-align: center;
   }
 
   &__add {
     flex-shrink: 0;
-    margin-top: auto;
-    width: 100%;
+    margin-top: spacing(6);
   }
 }
 </style>
