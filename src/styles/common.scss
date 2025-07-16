@@ -1,0 +1,7 @@
+@function spacing($n) {
+  @return $n * 2px;
+}
+
+@function radius($n) {
+  @return $n * 2px;
+}
