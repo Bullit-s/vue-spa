@@ -132,7 +132,6 @@ export default defineComponent({
     border-radius: radius(6);
   }
 
-  // States
   &.is-full-width {
     width: 100%;
   }

@@ -31,8 +31,7 @@ type TypographyVariant =
   | 'heading3'
   | 'body1'
   | 'body2'
-  | 'caption'
-  | 'small';
+  | 'body3';
 
 type TypographyColor = 'primary' | 'secondary' | 'muted' | 'error' | 'success';
 
@@ -56,8 +55,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/variables.scss';
-
 .typography {
   margin: 0;
   font-family: inherit;
@@ -75,12 +72,15 @@ export default defineComponent({
   }
 
   &--heading3 {
+    font-size: $text-sm;
+    font-weight: $weight-bold;
+    line-height: $line-height-5;
   }
 
   &--body1 {
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 1.5;
+    font-size: $text-xs;
+    font-weight: $weight-regular;
+    line-height: $line-height-xs;
   }
 
   &--body2 {
@@ -89,16 +89,10 @@ export default defineComponent({
     line-height: $line-height-base;
   }
 
-  &--caption {
-    font-size: 12px;
-    font-weight: 500;
-    line-height: 1.4;
-  }
-
-  &--small {
-    font-size: 10px;
-    font-weight: 400;
-    line-height: 1.4;
+  &--body3 {
+    font-size: $text-lg;
+    font-weight: $weight-regular;
+    line-height: $line-height-lg;
   }
 
   &--primary {

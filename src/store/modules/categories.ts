@@ -1,5 +1,6 @@
 import { getCategories } from '@/api/methods/categories';
-import { getProductsByCategory } from '@/api/methods/products';
+import { deleteProduct, getProductsByCategory } from '@/api/methods/products';
+import { ProductType } from '@/api/methods/products/types';
 import { Module } from 'vuex';
 
 export interface Category {
@@ -14,6 +15,13 @@ export interface CategoriesState {
   searchQuery: string;
   loading: boolean;
   error: string | null;
+  filters: {
+    sort: string;
+    limit: number;
+  };
+  products: ProductType[];
+  productsLoading: boolean;
+  productsError: string | null;
 }
 
 const categoriesModule: Module<CategoriesState, unknown> = {
@@ -24,6 +32,13 @@ const categoriesModule: Module<CategoriesState, unknown> = {
     searchQuery: '',
     loading: false,
     error: null,
+    filters: {
+      sort: 'title_desc',
+      limit: 25,
+    },
+    products: [],
+    productsLoading: false,
+    productsError: null,
   },
   getters: {
     filteredCategories: (state): Category[] => {
@@ -83,6 +98,26 @@ const categoriesModule: Module<CategoriesState, unknown> = {
     DELETE_CATEGORY(state, categoryId: number) {
       state.categories = state.categories.filter(
         (cat) => cat.id !== categoryId,
+      );
+    },
+    SET_SORT_FILTER(state, sort: string) {
+      state.filters.sort = sort;
+    },
+    SET_LIMIT_FILTER(state, limit: number) {
+      state.filters.limit = limit;
+    },
+    SET_PRODUCTS(state, products: ProductType[]) {
+      state.products = products;
+    },
+    SET_PRODUCTS_LOADING(state, loading: boolean) {
+      state.productsLoading = loading;
+    },
+    SET_PRODUCTS_ERROR(state, error: string | null) {
+      state.productsError = error;
+    },
+    DELETE_PRODUCT(state, productId: number) {
+      state.products = state.products.filter(
+        (product) => product.id !== productId,
       );
     },
   },
@@ -157,6 +192,54 @@ const categoriesModule: Module<CategoriesState, unknown> = {
     },
     deleteCategory({ commit }, categoryId: number) {
       commit('DELETE_CATEGORY', categoryId);
+    },
+    updateSortFilter({ commit }, sort: string) {
+      commit('SET_SORT_FILTER', sort);
+    },
+    updateLimitFilter({ commit }, limit: number) {
+      commit('SET_LIMIT_FILTER', limit);
+    },
+    async loadProducts({ commit, state }) {
+      if (!state.activeCategory) return;
+
+      commit('SET_PRODUCTS_LOADING', true);
+      commit('SET_PRODUCTS_ERROR', null);
+
+      try {
+        const activeCategory = state.categories.find(
+          (cat) => cat.id === state.activeCategory,
+        );
+
+        if (activeCategory) {
+          const response = await getProductsByCategory(activeCategory.name);
+          commit('SET_PRODUCTS', response.products || []);
+        }
+      } catch (error) {
+        console.error('Failed to load products:', error);
+        commit('SET_PRODUCTS_ERROR', 'Ошибка при загрузке продуктов');
+      } finally {
+        commit('SET_PRODUCTS_LOADING', false);
+      }
+    },
+    async deleteProduct({ commit, state }, productId: number) {
+      try {
+        await deleteProduct(productId);
+        commit('DELETE_PRODUCT', productId);
+
+        const activeCategory = state.categories.find(
+          (cat) => cat.id === state.activeCategory,
+        );
+        if (activeCategory) {
+          const newCount = Math.max(0, activeCategory.count - 1);
+          commit('UPDATE_CATEGORY_COUNT', {
+            categoryName: activeCategory.name,
+            count: newCount,
+          });
+        }
+      } catch (error) {
+        console.error('Failed to delete product:', error);
+        throw error;
+      }
     },
   },
 };

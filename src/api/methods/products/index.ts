@@ -1,4 +1,5 @@
 import api from '@/api';
+import { ApiResponse } from '@/api/types';
 import {
   CreateProductRequest,
   CreateProductResponse,
@@ -33,6 +34,7 @@ export const updateProduct = async (
   return response.data;
 };
 
-export const deleteProduct = async (id: number): Promise<void> => {
-  await api.delete(`/products/${id}`);
+export const deleteProduct = async (id: number): Promise<ApiResponse> => {
+  const response = await api.delete(`/products/${id}`);
+  return response.data;
 };

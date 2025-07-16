@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'BaseSpinner',
@@ -13,11 +13,10 @@ export default defineComponent({
       default: 24,
     },
   },
-  setup(props) {
-    const sizePx = computed(() =>
-      typeof props.size === 'number' ? `${props.size}px` : props.size,
-    );
-    return { sizePx };
+  computed: {
+    sizePx(): string {
+      return typeof this.size === 'number' ? `${this.size}px` : this.size;
+    },
   },
 });
 </script>

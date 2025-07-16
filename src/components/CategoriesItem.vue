@@ -15,10 +15,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
-export default Vue.extend({
-  name: 'CategoryItem',
+export default defineComponent({
+  name: 'CategoriesItem',
   props: {
     name: {
       type: String,

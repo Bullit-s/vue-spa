@@ -18,14 +18,14 @@ export default defineComponent({
   flex-direction: column;
   height: 100%;
   min-height: 100vh;
-  padding: spacing(12) spacing(16);
+  padding: 0 spacing(8);
 
   @include media-min(md) {
-    padding: spacing(14) spacing(24);
+    padding: 0 spacing(24);
   }
 
   @include media-min(lg) {
-    padding: spacing(20) spacing(40);
+    padding: 0 spacing(40);
   }
 }
 </style>

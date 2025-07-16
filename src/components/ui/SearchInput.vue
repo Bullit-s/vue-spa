@@ -16,10 +16,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import Icon from './Icon.vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'SearchInput',
   components: {
     Icon,

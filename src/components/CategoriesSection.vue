@@ -22,7 +22,7 @@
       </div>
 
       <template v-else>
-        <CategoryItem
+        <CategoriesItem
           v-for="category in filteredCategories"
           :key="category.id"
           :name="category.name"
@@ -42,7 +42,7 @@
       </Button>
     </div>
 
-    <CreateCategoryModal
+    <CategoriesCreateModal
       :visible="isCreateModalVisible"
       @create="handleCreateCategory"
       @close="hideCreateModal"
@@ -51,21 +51,21 @@
 </template>
 
 <script lang="ts">
-import CategoryItem from '@/components/CategoryItem.vue';
-import CreateCategoryModal from '@/components/CreateCategoryModal.vue';
+import CategoriesCreateModal from '@/components/CategoriesCreateModal.vue';
+import CategoriesItem from '@/components/CategoriesItem.vue';
 import Button from '@/components/ui/Button.vue';
 import Icon from '@/components/ui/Icon.vue';
 import SearchInput from '@/components/ui/SearchInput.vue';
 import BaseSpinner from '@/components/ui/Spinner.vue';
 import Typography from '@/components/ui/Typography.vue';
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
-export default Vue.extend({
-  name: 'CategoriesList',
+export default defineComponent({
+  name: 'CategoriesSection',
   components: {
     Button,
-    CategoryItem,
-    CreateCategoryModal,
+    CategoriesItem,
+    CategoriesCreateModal,
     Icon,
     Typography,
     SearchInput,
@@ -94,7 +94,6 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    // Загружаем категории при монтировании компонента
     await this.$store.dispatch('categories/loadCategories');
   },
   methods: {
@@ -135,6 +134,16 @@ export default Vue.extend({
   height: 100%;
   min-height: 0;
 
+  padding-bottom: spacing(8);
+
+  @include media-min(md) {
+    padding-bottom: spacing(12);
+  }
+
+  @include media-min(lg) {
+    padding-bottom: spacing(20);
+  }
+
   &__header {
     flex-shrink: 0;
     margin-bottom: spacing(6);
@@ -152,7 +161,6 @@ export default Vue.extend({
     flex-direction: column;
     gap: spacing(4);
 
-    /* Custom scrollbar */
     &::-webkit-scrollbar {
       width: 4px;
     }

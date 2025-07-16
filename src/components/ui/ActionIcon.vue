@@ -1,6 +1,6 @@
 <template>
   <button
-    :class="['action-icon', `action-icon--${size}`]"
+    :class="['action-icon', `action-icon--${size}`, `action-icon--${variant}`]"
     :disabled="disabled"
     @click="$emit('click', $event)"
     @mousedown="$emit('mousedown', $event)"
@@ -15,6 +15,7 @@ import { defineComponent, PropType } from 'vue';
 import Icon from './Icon.vue';
 
 type ActionIconSize = 'xs' | 'sm' | 'base' | 'lg' | 'xl';
+type ActionIconVariant = 'default' | 'secondary';
 
 export default defineComponent({
   name: 'ActionIcon',
@@ -30,20 +31,23 @@ export default defineComponent({
       type: String as PropType<ActionIconSize>,
       default: 'base',
     },
+    variant: {
+      type: String as PropType<ActionIconVariant>,
+      default: 'default',
+    },
     disabled: {
       type: Boolean,
       default: false,
     },
   },
-  emits: ['click', 'mousedown', 'mouseup'],
   computed: {
     iconSize(): string {
       const sizeMap: Record<ActionIconSize, string> = {
         xs: 'xs',
-        sm: 'sm',
-        base: 'base',
+        sm: 'xs',
+        base: 'xs',
         lg: 'lg',
-        xl: 'xl',
+        xl: 'sm',
       };
       return sizeMap[this.size as ActionIconSize];
     },
@@ -59,8 +63,9 @@ export default defineComponent({
   border: none;
   background: none;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-  border-radius: radius(4);
+  transition: background-color 0.2s ease, transform 0.1s ease,
+    border-color 0.2s ease;
+  border-radius: radius(3);
   outline: none;
   width: 32px;
   height: 32px;
@@ -74,33 +79,53 @@ export default defineComponent({
     opacity: 0.5;
   }
 
-  &:hover:not(:disabled) {
-    background: $color-gray-2;
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &--default {
+    border: none;
+
+    &:hover:not(:disabled) {
+      background: $color-gray-2;
+    }
+  }
+
+  &--secondary {
+    color: $color-black;
+    background: $color-gray-1;
+    border: 1px solid $color-gray-3;
+
+    &:hover:not(:disabled) {
+      background: $color-gray-3;
+      border-color: $color-gray-3;
+    }
   }
 
   &--xs {
-    min-width: spacing(4);
-    min-height: spacing(4);
+    width: spacing(10);
+    height: spacing(10);
   }
 
   &--sm {
-    min-width: spacing(5);
-    min-height: spacing(5);
+    width: spacing(12);
+    height: spacing(12);
   }
 
   &--base {
-    min-width: spacing(6);
-    min-height: spacing(6);
+    width: spacing(16);
+    height: spacing(16);
   }
 
   &--lg {
-    min-width: spacing(8);
-    min-height: spacing(8);
+    width: spacing(18);
+    height: spacing(18);
   }
 
   &--xl {
-    min-width: spacing(10);
-    min-height: spacing(10);
+    width: spacing(20);
+    height: spacing(20);
   }
 }
 </style>

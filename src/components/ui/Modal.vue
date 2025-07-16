@@ -1,16 +1,14 @@
 <template>
-  <teleport to="body">
-    <transition name="modal" appear>
-      <div v-if="visible" class="modal-overlay" @click="handleOverlayClick">
-        <div class="modal-backdrop"></div>
-        <div class="modal-container" @click.stop>
-          <div class="modal-content">
-            <slot />
-          </div>
+  <transition name="modal" appear>
+    <div v-if="visible" class="modal-overlay" @click="handleOverlayClick">
+      <div class="modal-backdrop"></div>
+      <div class="modal-container" @click.stop>
+        <div class="modal-content">
+          <slot />
         </div>
       </div>
-    </transition>
-  </teleport>
+    </div>
+  </transition>
 </template>
 
 <script lang="ts">
@@ -28,7 +26,6 @@ export default defineComponent({
       default: true,
     },
   },
-  emits: ['close'],
   methods: {
     handleOverlayClick() {
       if (this.closeOnOverlayClick) {
@@ -41,7 +38,7 @@ export default defineComponent({
       document.body.style.overflow = 'hidden';
     }
   },
-  beforeUnmount() {
+  beforeDestroy() {
     document.body.style.overflow = '';
   },
   watch: {
@@ -79,6 +76,7 @@ export default defineComponent({
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
+  will-change: opacity;
 }
 
 .modal-container {
@@ -104,21 +102,22 @@ export default defineComponent({
 
 .modal-enter-active,
 .modal-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity 0.2s ease-out;
 }
 
-.modal-enter-from,
+.modal-enter,
 .modal-leave-to {
   opacity: 0;
 }
 
 .modal-enter-active .modal-content,
 .modal-leave-active .modal-content {
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease-out;
+  will-change: transform;
 }
 
-.modal-enter-from .modal-content,
+.modal-enter .modal-content,
 .modal-leave-to .modal-content {
-  transform: scale(0.9) translateY(-spacing(4));
+  transform: scale(0.95) translateY(-spacing(2));
 }
 </style>

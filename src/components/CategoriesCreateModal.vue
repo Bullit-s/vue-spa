@@ -3,13 +3,13 @@
     <div class="create-category-modal">
       <ActionIcon
         icon="close-line"
-        variant="ghost"
-        size="base"
+        variant="default"
+        size="lg"
         class="close-button"
         @click="handleCancel"
       />
       <div class="modal-header">
-        <Typography tag="h2" variant="heading1"> Создать категорию </Typography>
+        <Typography tag="h2" variant="heading1">Создать категорию</Typography>
       </div>
 
       <div class="modal-content">
@@ -40,9 +40,9 @@
           variant="primary"
           size="large"
           fullWidth
+          class="confirm-button"
           @click="handleConfirm"
           :disabled="!categoryName.trim() || isLoading"
-          class="confirm-button"
         >
           <template v-if="!isLoading" #leftSection>
             <Icon name="add-line" size="lg" />
@@ -64,7 +64,7 @@ import Modal from './ui/Modal.vue';
 import Typography from './ui/Typography.vue';
 
 export default defineComponent({
-  name: 'CreateCategoryModal',
+  name: 'CategoriesCreateModal',
   components: {
     ActionIcon,
     Modal,
