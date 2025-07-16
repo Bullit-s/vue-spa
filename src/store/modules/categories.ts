@@ -74,11 +74,11 @@ const categoriesModule: Module<CategoriesState, unknown> = {
     selectCategory({ commit }, categoryId: number) {
       commit('SET_ACTIVE_CATEGORY', categoryId);
     },
-    addCategory({ commit, state }) {
+    addCategory({ commit, state }, categoryName: string) {
       const newId = Math.max(...state.categories.map((cat) => cat.id)) + 1;
       const newCategory: Category = {
         id: newId,
-        name: `New Category ${newId}`,
+        name: categoryName,
         count: 0,
       };
       commit('ADD_CATEGORY', newCategory);

@@ -24,19 +24,26 @@
     </div>
 
     <div class="categories__add">
-      <Button variant="primary" size="large" @click="handleAddCategory">
+      <Button variant="primary" size="large" fullWidth @click="showCreateModal">
         <template #leftSection>
           <Icon name="add-line" size="lg" color="white" />
         </template>
         Добавить
       </Button>
     </div>
+
+    <CreateCategoryModal
+      :visible="isCreateModalVisible"
+      @create="handleCreateCategory"
+      @close="hideCreateModal"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import CategoryItem from '@/components/CategoryItem.vue';
 import Button from '@/components/ui/Button.vue';
+import CreateCategoryModal from '@/components/ui/CreateCategoryModal.vue';
 import Icon from '@/components/ui/Icon.vue';
 import SearchInput from '@/components/ui/SearchInput.vue';
 import Typography from '@/components/ui/Typography.vue';
@@ -47,9 +54,15 @@ export default Vue.extend({
   components: {
     Button,
     CategoryItem,
+    CreateCategoryModal,
     Icon,
     Typography,
     SearchInput,
+  },
+  data() {
+    return {
+      isCreateModalVisible: false,
+    };
   },
   computed: {
     filteredCategories() {
@@ -73,8 +86,21 @@ export default Vue.extend({
       this.$emit('category-selected', categoryId);
     },
 
+    showCreateModal(): void {
+      this.isCreateModalVisible = true;
+    },
+
+    hideCreateModal(): void {
+      this.isCreateModalVisible = false;
+    },
+
+    handleCreateCategory(categoryName: string): void {
+      this.$store.dispatch('categories/addCategory', categoryName);
+      this.$emit('category-created', categoryName);
+    },
+
     handleAddCategory(): void {
-      this.$store.dispatch('categories/addCategory');
+      this.$store.dispatch('categories/addCategory', 'New Category');
       this.$emit('add-category');
     },
   },
@@ -128,10 +154,7 @@ export default Vue.extend({
   &__add {
     flex-shrink: 0;
     margin-top: auto;
-
-    > button {
-      width: 100%;
-    }
+    width: 100%;
   }
 }
 </style>

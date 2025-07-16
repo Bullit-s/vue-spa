@@ -4,7 +4,11 @@
       'base-button',
       `base-button--${variant}`,
       `base-button--${size}`,
-      { 'is-selected': selected, 'is-active': active },
+      {
+        'is-selected': selected,
+        'is-active': active,
+        'is-full-width': fullWidth,
+      },
     ]"
     :disabled="disabled"
     @mousedown="$emit('mousedown', $event)"
@@ -54,6 +58,10 @@ export default defineComponent({
       type: String,
       default: '',
     },
+    fullWidth: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     handleClick(event: MouseEvent) {
@@ -71,7 +79,7 @@ export default defineComponent({
   justify-content: center;
   border-radius: radius(5);
   font-weight: 500;
-  border: none;
+  border: 1px solid transparent;
   outline: none;
   cursor: pointer;
   transition: all 0.15s;
@@ -124,6 +132,11 @@ export default defineComponent({
     border-radius: radius(6);
   }
 
+  // States
+  &.is-full-width {
+    width: 100%;
+  }
+
   &--primary {
     color: $color-white;
     background: $color-purple-1;
@@ -135,7 +148,7 @@ export default defineComponent({
     }
     &:focus {
       background: $color-purple-3;
-      border: none;
+      border-color: transparent;
     }
     &:active {
       background: $color-purple-1;
@@ -146,7 +159,8 @@ export default defineComponent({
     &:disabled {
       background: $color-gray-2;
       color: rgba($color-black, 0.12);
-      border: none;
+      border-color: transparent;
+      box-shadow: none;
     }
   }
 
@@ -172,7 +186,8 @@ export default defineComponent({
     &:disabled {
       background: $color-gray-2;
       color: rgba($color-black, 0.12);
-      border: none;
+      border-color: transparent;
+      box-shadow: none;
     }
   }
 
@@ -200,14 +215,15 @@ export default defineComponent({
     &:disabled {
       background: $color-gray-2;
       color: rgba($color-black, 0.12);
-      border: none;
+      border-color: transparent;
+      box-shadow: none;
     }
   }
 
   &--danger {
     color: $color-white;
     background: $color-red-1;
-    border: none;
+    border-color: transparent;
 
     &:hover:not(:disabled):not(:focus):not(:active) {
       background: $color-red-2;
@@ -224,7 +240,8 @@ export default defineComponent({
     &:disabled {
       background: $color-gray-2;
       color: rgba($color-black, 0.12);
-      border: none;
+      border-color: transparent;
+      box-shadow: none;
     }
   }
 }

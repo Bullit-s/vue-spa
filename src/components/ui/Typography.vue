@@ -75,9 +75,6 @@ export default defineComponent({
   }
 
   &--heading3 {
-    font-size: 20px;
-    font-weight: 600;
-    line-height: 1.4;
   }
 
   &--body1 {
@@ -87,9 +84,9 @@ export default defineComponent({
   }
 
   &--body2 {
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1.5;
+    font-size: $text-base;
+    font-weight: $weight-regular;
+    line-height: $line-height-base;
   }
 
   &--caption {
